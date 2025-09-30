@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cricket Analytics Charts</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 20px;
+    }
+    .chart-container {
+      width: 100%;
+      max-width: 900px;
+      height: 500px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Average Strike Rate Over Years -->
+  <h2>Average Strike Rate Over Years</h2>
+  <div class="chart-container">
+    <canvas id="strikeRateChart"></canvas>
+  </div>
+
+  <!-- Top F20B Strike Rates vs Fast -->
+  <h2>Top F20B Strike Rates vs Fast</h2>
+  <div class="chart-container">
+    <canvas id="strikeRateFastChart"></canvas>
+  </div>
+
+  <!-- Top F20B Strike Rates vs Spin -->
+  <h2>Top F20B Strike Rates vs Spin</h2>
+  <div class="chart-container">
+    <canvas id="strikeRateSpinChart"></canvas>
+  </div>
+
+  <!-- Sehwag vs Duckett Mean & Median Balls -->
+  <h2>Sehwag vs Duckett: Mean & Median Balls</h2>
+  <div class="chart-container">
+    <canvas id="meanMedianChart"></canvas>
+  </div>
+
+  <!-- Fraction of Times >20 Balls -->
+  <h2>Fraction of Times >20 Balls: Sehwag vs Duckett</h2>
+  <div class="chart-container">
+    <canvas id="fraction20Chart"></canvas>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+
+    // ------------------------
+    // Average Strike Rate Chart
+    const ctxSR = document.getElementById('strikeRateChart').getContext('2d');
+    new Chart(ctxSR, {
+      type: 'line',
+      data: {
+        labels: [2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],
+        datasets: [{
+          label: 'Average Strike Rate',
+          data: [44.306220,45.914647,45.927093,47.794848,45.494899,46.184279,45.552523,44.937958,49.783805,46.083637,46.376091,46.006442,43.196458,45.850584,43.515157,41.993815,48.798021,51.113299,51.178716,49.408428],
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: { display: true, text: 'Average Strike Rate Over Years' },
+          legend: { display: true }
+        },
+        scales: {
+          x: { title: { display: true, text: 'Year' } },
+          y: { title: { display: true, text: 'Average Strike Rate' }, beginAtZero: false }
+        }
+      }
+    });
+
+    // ------------------------
+    // Top F20B Strike Rates vs Fast
+    const ctxFast = document.getElementById('strikeRateFastChart').getContext('2d');
+    new Chart(ctxFast, {
+      type: 'bar',
+      data: {
+        labels: ["TG Southee","C de Grandhomme","V Sehwag","BM Duckett","SM Curran","TM Dilshan","HC Brook","Q de Kock","GP Swann","SCJ Broad","DJG Sammy","DA Warner","DG Bedingham","SC Williams","CH Gayle"],
+        datasets: [{
+          label: 'Strike rate vs fast (first 20 balls)',
+          data: [91.42,89.69,87.63,84.16,78.74,76.97,76.89,73.83,73.48,72.90,71.87,69.63,69.38,68.40,67.84],
+          backgroundColor: 'rgba(54, 162, 235, 0.7)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: { indexAxis: 'y', responsive: true, plugins: { legend:{display:false}, title:{display:true,text:'Top F20B Strike Rates vs Fast'} }, scales:{x:{beginAtZero:true}} }
+    });
+
+    // ------------------------
+    // Top F20B Strike Rates vs Spin
+    const ctxSpin = document.getElementById('strikeRateSpinChart').getContext('2d');
+    new Chart(ctxSpin, {
+      type: 'bar',
+      data: {
+        labels: ["V Sehwag","Sarfraz Ahmed","BM Duckett","RR Pant","CH Gayle","TM Dilshan","YBK Jaiswal","GP Swann","HC Brook","Z Crawley","N Dickwella","Q de Kock","TG Southee","KA Maharaj","DA Warner"],
+        datasets: [{
+          label: 'Strike rate vs spin (first 20 balls)',
+          data: [103.24,90.47,84.79,80.62,79.38,79.14,78.44,78.37,76.65,73.28,71.12,70.52,68.46,68.14,67.98],
+          backgroundColor: 'rgba(54, 162, 235, 0.7)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: { indexAxis: 'y', responsive:true, plugins:{legend:{display:false}, title:{display:true,text:'Top F20B Strike Rates vs Spin'}}, scales:{x:{beginAtZero:true}} }
+    });
+
+    // ------------------------
+    // Sehwag vs Duckett Mean & Median Balls
+    const ctxMM = document.getElementById('meanMedianChart').getContext('2d');
+    new Chart(ctxMM, {
+      type: 'bar',
+      data: {
+        labels: ["Mean","Median","Mean","Median"],
+        datasets: [
+          { label:'Others', data:[82.42,53,65.43,47], backgroundColor:'rgba(255,159,64,0.8)', barPercentage:0.5, categoryPercentage:0.5 },
+          { label:'Player', data:[50.33,30,48.31,35], backgroundColor:'rgba(255,99,132,0.8)', barPercentage:0.5, categoryPercentage:0.5 }
+        ]
+      },
+      options:{
+        responsive:true,
+        plugins:{legend:{position:'top'}, title:{display:true,text:'Mean & Median Balls: Sehwag & Duckett vs Others'}},
+        scales:{y:{beginAtZero:true}, x:{stacked:false}}
+      }
+    });
+
+    // ------------------------
+    // Fraction of Times >20 Balls
+    const ctxF20 = document.getElementById('fraction20Chart').getContext('2d');
+    new Chart(ctxF20, {
+      type: 'bar',
+      data: {
+        labels: ["Fraction >20 Balls","Fraction >20 Balls"],
+        datasets:[
+          {label:'Others', data:[0.78,0.75], backgroundColor:'rgba(255,159,64,0.8)', barPercentage:0.5, categoryPercentage:0.5},
+          {label:'Player', data:[0.63,0.61], backgroundColor:'rgba(255,99,132,0.8)', barPercentage:0.5, categoryPercentage:0.5}
+        ]
+      },
+      options:{
+        responsive:true,
+        plugins:{legend:{position:'top'}, title:{display:true,text:'Fraction of Times >20 Balls: Sehwag & Duckett vs Others'}},
+        scales:{y:{beginAtZero:true,max:1}, x:{stacked:false}}
+      }
+    });
+
+  });
+  </script>
+</body>
+</html>
